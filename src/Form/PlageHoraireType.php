@@ -31,10 +31,14 @@ class PlageHoraireType extends AbstractType
                 'jeudi' => '3' ,
                 'vendredi' => '4' ,
             ]])
-//            ->add('etat', EntityType::class,['class' => Etat::class,
-//                'choice_label' => 'nom_etat',
-//                'label' => 'Etat : '])
-        ;
+            ->add('etats', EntityType::class, [
+                'class' => Etat::class,
+                'choice_label' => 'nom_etat',
+                'label' => 'État : ',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
