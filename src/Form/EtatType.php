@@ -13,7 +13,7 @@ class EtatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom_etat', ChoiceType::class, ['choices' =>
+            ->add('nomEtat', ChoiceType::class, ['choices' =>
             ['Sur site' => 'Sur site',
                 'Télétravail' => 'Télétravail',
                 'Repos' => 'Repos',
