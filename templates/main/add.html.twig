@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planning Type{% endblock %}
+
+{% block body %}
+    <h2>Ajouter un Etat</h2>
+    {{ form_start(etatForm) }}
+    <div>
+    {{ form_widget(etatForm) }}
+    </div>
+    <button>Ajouter Etat !</button>
+    {{ form_end(etatForm) }}
+
+
+{% endblock %}
