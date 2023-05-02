@@ -21,6 +21,9 @@ class PlanningType
     #[ORM\ManyToMany(targetEntity: PlageHoraire::class, inversedBy: 'planningTypes')]
     private Collection $plagesHoraires;
 
+    #[ORM\Column(length: 255)]
+    private ?string $inom = null;
+
     public function __construct()
     {
         $this->plagesHoraires = new ArrayCollection();
@@ -63,6 +66,18 @@ class PlanningType
     public function removePlagesHoraire(PlageHoraire $plagesHoraire): self
     {
         $this->plagesHoraires->removeElement($plagesHoraire);
+
+        return $this;
+    }
+
+    public function getInom(): ?string
+    {
+        return $this->inom;
+    }
+
+    public function setInom(string $inom): self
+    {
+        $this->inom = $inom;
 
         return $this;
     }

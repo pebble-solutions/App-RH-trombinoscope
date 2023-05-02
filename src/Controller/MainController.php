@@ -37,13 +37,24 @@ class MainController extends AbstractController
 
             //Affiche message si bien enristré en BDD
             $this->addFlash('succes', "Plage Horaire Ajoutée !");
-          //  return $this->redirectToRoute('main/index.html.twig');
+           return $this->redirectToRoute('main_home');
         }
 
         return $this->render('main/add.html.twig',['plageHoraire' => $plageHoraire,
             'plageHoraireForm' => $plageHoraireForm->createView()
         ]);
 
+    }
+
+    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+    public function showPlanningUser(int $id, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+    {
+
+        $plageHoraire = $plageHoraireRepository->find($id);
+        $etat = $etatRepository->find($id);
+        return $this->render('main/showPlanning.html.twig', [
+           'plageHoraire' => $plageHoraire, 'etat' => $etat
+        ]);
     }
 //    #[Route('/add', name: 'addEtat')]
 //    public function addEtat(EtatRepository $etatRepository, Request $request): Response
@@ -64,5 +75,17 @@ class MainController extends AbstractController
 //            'etatForm' => $etatForm->createView()
 //        ]);
 //
+//    }
+
+//
+//    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+//    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+//    {
+//        $planningType = $planningTypeRepository->find($id);
+//        $plageHoraire = $plageHoraireRepository->find($id);
+//        $etat = $etatRepository->find($id);
+//        return $this->render('main/showPlanning.html.twig', [
+//            'planningType' => $planningType, 'plageHoraire' => $plageHoraire, 'etat' => $etat
+//        ]);
 //    }
 }
