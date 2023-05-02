@@ -8,6 +8,7 @@ use App\Form\EtatType;
 use App\Form\PlageHoraireType;
 use App\Repository\EtatRepository;
 use App\Repository\PlageHoraireRepository;
+use App\Repository\PlanningTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,17 +46,17 @@ class MainController extends AbstractController
         ]);
 
     }
-
-    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
-    public function showPlanningUser(int $id, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
-    {
-
-        $plageHoraire = $plageHoraireRepository->find($id);
-        $etat = $etatRepository->find($id);
-        return $this->render('main/showPlanning.html.twig', [
-           'plageHoraire' => $plageHoraire, 'etat' => $etat
-        ]);
-    }
+//
+//    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+//    public function showPlanningUser(int $id, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+//    {
+//
+//        $plageHoraire = $plageHoraireRepository->find($id);
+//        $etat = $etatRepository->find($id);
+//        return $this->render('main/showPlanning.html.twig', [
+//           'plageHoraire' => $plageHoraire, 'etat' => $etat
+//        ]);
+//    }
 //    #[Route('/add', name: 'addEtat')]
 //    public function addEtat(EtatRepository $etatRepository, Request $request): Response
 //    {
@@ -77,15 +78,16 @@ class MainController extends AbstractController
 //
 //    }
 
-//
-//    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
-//    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
-//    {
-//        $planningType = $planningTypeRepository->find($id);
-//        $plageHoraire = $plageHoraireRepository->find($id);
-//        $etat = $etatRepository->find($id);
-//        return $this->render('main/showPlanning.html.twig', [
-//            'planningType' => $planningType, 'plageHoraire' => $plageHoraire, 'etat' => $etat
-//        ]);
-//    }
+    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+    {
+        $planningType = $planningTypeRepository->find($id);
+        $plagesHoraires = $planningType->getPlagesHoraires();
+        $etat = $etatRepository->find($id);
+        return $this->render('main/showPlanning.html.twig', [
+            'planningType' => $planningType, 'plagesHoraires' => $plagesHoraires, 'etat' => $etat
+        ]);
+    }
+
+
 }

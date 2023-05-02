@@ -12,12 +12,16 @@
         6: 'dimanche'
     } %}
 
+    <div> Id Employé : {{ planningType.idEmploye}} </div>
+    <div> Planning type : {{ planningType.inom }} </div>
 
-    <div> Nom : {{ plageHoraire.nomPlage }} </div>
-    <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>
-    <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>
-    <div> Jour : {{ joursSemaine[plageHoraire.numJour] }} </div>
-    <div> Etat : {{ etat.nomEtat}} </div>
+    {% for plageHoraire in plagesHoraires %}
+        <div> Nom : {{ plageHoraire.nomPlage }} </div>
+        <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>
+        <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>
+        <div> Jour : {{ joursSemaine[plageHoraire.numJour] }} </div>
+        <div> Etat : {{ etat.nomEtat}} </div>
+    {% endfor %}
 
 {% endblock %}
 
