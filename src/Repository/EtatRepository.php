@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Etat;
+use App\Entity\PlageHoraire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,16 @@ class EtatRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByPlageHoraires(PlageHoraire $plageHoraire): ?Etat
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->join('e.plageHoraires', 'ph')
+            ->andWhere('ph.id = :plageHoraireId')
+            ->setParameter('plageHoraireId', $plageHoraire->getId());
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
 //    /**

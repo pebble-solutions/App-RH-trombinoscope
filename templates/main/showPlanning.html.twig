@@ -20,7 +20,7 @@
         <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>
         <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>
         <div> Jour : {{ joursSemaine[plageHoraire.numJour] }} </div>
-        <div> Etat : {{ etat.nomEtat}} </div>
+        <div> Etat : {{ etats[plageHoraire.id].nomEtat }} </div>
     {% endfor %}
 
 {% endblock %}
