@@ -1,0 +1,32 @@
+/* Style pour la grille */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-gap: 10px;
+}
+
+/* Style pour les cases */
+.morning {
+    background-color: #F5DEB3; /* Couleur de fond */
+    padding: 10px; /* Espacement intérieur */
+}
+
+.afternoon {
+    background-color: #ADD8E6; /* Couleur de fond */
+    padding: 10px; /* Espacement intérieur */
+}
+
+.jour-semaine {
+    border: 1px solid #ccc; /* Bordure */
+    padding: 10px; /* Espacement intérieur */
+}
+
+.plages-horaires {
+    display: flex;
+    flex-direction: row;
+}
+
+.plage-horaire {
+    margin-right: 10px;
+}

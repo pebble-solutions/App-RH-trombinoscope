@@ -15,13 +15,35 @@
     <div> Id Employé : {{ planningType.idEmploye}} </div>
     <div> Planning type : {{ planningType.inom }} </div>
 
-    {% for plageHoraire in plagesHoraires %}
-        <div> Nom : {{ plageHoraire.nomPlage }} </div>
-        <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>
-        <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>
-        <div> Jour : {{ joursSemaine[plageHoraire.numJour] }} </div>
-        <div> Etat : {{ etats[plageHoraire.id].nomEtat }} </div>
+    {% for jour in 0..6 %}
+        <div class="jour-semaine">
+            {{ joursSemaine[jour] }}
+            <div class="plages-horaires">
+                {% for plageHoraire in plagesHoraires %}
+                    {% if plageHoraire.numJour == jour %}
+                        <div class="plage-horaire{% if plageHoraire.nomPlage == 'matin' %} morning{% elseif plageHoraire.nomPlage == 'apres-midi' %} afternoon{% endif %}">
+                            <div> Nom : {{ plageHoraire.nomPlage }} </div>
+                            <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>
+                            <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>
+                            <div> Etat : {{ etats[plageHoraire.id].nomEtat }} </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
     {% endfor %}
+
+
+
+
+
+    {#    {% for plageHoraire in plagesHoraires %}#}
+{#        <div> Nom : {{ plageHoraire.nomPlage }} </div>#}
+{#        <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>#}
+{#        <div> Heure de fin : {{ plageHoraire.fin.format('H:i') }} </div>#}
+{#        <div> Jour : {{ joursSemaine[plageHoraire.numJour] }} </div>#}
+{#        <div> Etat : {{ etats[plageHoraire.id].nomEtat }} </div>#}
+{#    {% endfor %}#}
 
 {% endblock %}
 
