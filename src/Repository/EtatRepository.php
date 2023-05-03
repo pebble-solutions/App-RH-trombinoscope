@@ -40,6 +40,7 @@ class EtatRepository extends ServiceEntityRepository
         }
     }
 
+// Trouver l'etat a partir de la plage horaire
     public function findByPlageHoraires(PlageHoraire $plageHoraire): ?Etat
     {
         $qb = $this->createQueryBuilder('e')

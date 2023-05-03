@@ -26,7 +26,8 @@ class MainController extends AbstractController
     #[Route('/add', name: 'addPlageHoraire')]
     public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository,Request $request): Response
     {
-
+    //Formulaire pour ajouter un planning
+        //TODO revoir ajout d'un etat par plage horaire et non pour la journée
         $plageHoraire = new PlageHoraire();
         $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
         $plageHoraireForm->handleRequest($request);
@@ -36,7 +37,7 @@ class MainController extends AbstractController
         if($plageHoraireForm->isSubmitted()){
             $plageHoraireRepository->save($plageHoraire, true);
 
-            //Affiche message si bien enristré en BDD
+            //TODO Affiche message si bien enristré en BDD
             $this->addFlash('succes', "Plage Horaire Ajoutée !");
            return $this->redirectToRoute('main_home');
         }
