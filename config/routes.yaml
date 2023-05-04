@@ -1,3 +1,8 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+planning_type:
+    path: /planning_type/employe/{id}
+    controller: App\Controller\PlanningTypeController::showEmployePlanning
+    methods: [GET]
