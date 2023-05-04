@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/', name: 'main_')]
 class MainController extends AbstractController
@@ -47,10 +48,16 @@ class MainController extends AbstractController
         ]);
 
     }
+
     #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
-    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
     {
+        // Récupérer les données de l'employé
+        $employe = $this->getEmploye($client, $id);
+
+        // Récupérer les données du planning type
         $planningType = $planningTypeRepository->find($id);
+
         // Récupérer les plages horaires pour le planning type donné
         $plagesHoraires = $planningType->getPlagesHoraires();
 
@@ -60,54 +67,72 @@ class MainController extends AbstractController
             $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
         }
 
-        return $this->render('main/showPlanning.html.twig', [
+        // Fusionner les tableaux associatifs des données
+        $data = array_merge([
+            'employe' => $employe,
             'planningType' => $planningType,
             'plagesHoraires' => $plagesHoraires,
             'etats' => $etats,
         ]);
+
+        return $this->render('main/showPlanning.html.twig', $data);
     }
 
+    /**
+     * Récupère les données de l'employé depuis l'API
+     */
+    private function getEmploye(HttpClientInterface $client, int $id): array
+    {
+        $url = 'http://172.17.0.2/public/employe/'.$id;
+        $response = $client->request('GET', $url);
 
-//
-//    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
-//    public function showPlanningUser(int $id, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
-//    {
-//
-//        $plageHoraire = $plageHoraireRepository->find($id);
-//        $etat = $etatRepository->find($id);
-//        return $this->render('main/showPlanning.html.twig', [
-//           'plageHoraire' => $plageHoraire, 'etat' => $etat
-//        ]);
-//    }
-//    #[Route('/add', name: 'addEtat')]
-//    public function addEtat(EtatRepository $etatRepository, Request $request): Response
-//    {
-//        $etat = new Etat();
-//        $etatForm = $this->createForm(EtatType::class, $etat);
-//        $etatForm->handleRequest($request);
-//
-//        //si soumis rentre en BDD
-//        if($etatForm->isSubmitted()){
-//            $etatRepository->save($etat, true);
-//            //Affiche message si bien enristré en BDD
-//            $this->addFlash('succes', "Etat Ajouté !");
-//            //  return $this->redirectToRoute('main/index.html.twig');
-//        }
-//
-//        return $this->render('main/add.html.twig',['etat' => $etat,
-//            'etatForm' => $etatForm->createView()
-//        ]);
-//
-//    }
+        return json_decode($response->getContent(), true);
+    }
+}
+
+#[Route('/planning_type/', name: 'planning_type_')]
+class PlanningTypeController extends AbstractController
+{
+    #[Route('/employe/{id}', name: 'retrieve_one',requirements: ['id'=> '\d+'], methods: ["GET"])]
+    public function showEmployePlanning(int $id, HttpClientInterface $client): Response
+    {
+        // Récupérer les données de l'employé
+        $employe = $this->getEmploye($client, $id);
+
+        return $this->render('planning_type/show.html.twig', [
+            'employe' => $employe,
+        ]);
+    }
+
+    /**
+     * Récupère les données de l'employé depuis l'API
+     */
+    private function getEmploye(HttpClientInterface $client, int $id): array
+    {
+        $url = 'http://172.17.0.2/public/employe/'.$id;
+        $response = $client->request('GET', $url);
+
+        return json_decode($response->getContent(), true);
+    }
+
 
 //    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
 //    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
 //    {
 //        $planningType = $planningTypeRepository->find($id);
+//        // Récupérer les plages horaires pour le planning type donné
 //        $plagesHoraires = $planningType->getPlagesHoraires();
-//        $etat = $etatRepository->find($id);
+//
+//        // Récupérer les états liés à chaque plage horaire
+//        $etats = [];
+//        foreach ($plagesHoraires as $plageHoraire) {
+//            $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
+//        }
+//
 //        return $this->render('main/showPlanning.html.twig', [
-//            'planningType' => $planningType, 'plagesHoraires' => $plagesHoraires, 'etat' => $etat
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
 //        ]);
 //    }
 

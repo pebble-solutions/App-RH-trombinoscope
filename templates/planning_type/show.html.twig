@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <h1>Détails de l'employé</h1>
 
     {% if employe is defined %}
@@ -15,4 +16,5 @@
     {% else %}
         <p>Aucun employé trouvé avec cet identifiant.</p>
     {% endif %}
+
 {% endblock %}
