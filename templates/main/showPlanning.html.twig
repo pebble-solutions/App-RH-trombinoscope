@@ -2,6 +2,7 @@
 
 {% block body %}
 
+    <!-- Tableau associatif pour mapper les jours de la semaine avec des nombres -->
     {% set joursSemaine = {
         0: 'lundi',
         1: 'mardi',
@@ -12,31 +13,41 @@
         6: 'dimanche'
     } %}
 
-
     <h1>Détails de l'employé</h1>
 
+    <!-- Afficher les détails de l'employé si un objet employe est défini -->
     {% if employe is defined %}
+        <p><strong>Id:</strong> {{ employe.id }}</p>
         <p><strong>Personne:</strong> {{ employe.personne }}</p>
         <p><strong>Matricule:</strong> {{ employe.matricule }}</p>
         <p><strong>Niveau hiérarchique:</strong> {{ employe.niveau_hierarchique }}</p>
         <p><strong>N-1:</strong> {{ employe.n_1 }}</p>
         <p><strong>Cache nom:</strong> {{ employe.cache_nom }}</p>
         <p><strong>Date d'entrée:</strong> {{ employe.dentree|date('d/m/Y') }}</p>
-        <p><strong>Date de sortie:</strong> {% if employe.dsortie is not null %}{{ employe.dsortie|date('d/m/Y') }}{% else %}Non renseignée{% endif %}</p>
+        <p><strong>Date de
+                sortie:</strong> {% if employe.dsortie is not null %}{{ employe.dsortie|date('d/m/Y') }}{% else %}Non renseignée{% endif %}
+        </p>
         <p><strong>Initiales:</strong> {{ employe.initials }}</p>
     {% else %}
+        <!-- Si aucun objet employé n'est défini, afficher un message -->
         <p>Aucun employé trouvé avec cet identifiant.</p>
     {% endif %}
 
-    <div> Id Employé : {{ planningType.idEmploye}} </div>
+    <!-- Afficher les informations du planning type -->
+    <div> Id Employé : {{ planningType.idEmploye }} </div>
     <div> Planning type : {{ planningType.inom }} </div>
 
+    <!-- Afficher les plages horaires pour chaque jour de la semaine -->
     {% for jour in 0..6 %}
         <div class="jour-semaine">
             {{ joursSemaine[jour] }}
+
+            <!-- Boucle pour afficher toutes les plages horaires pour ce jour -->
             <div class="plages-horaires">
                 {% for plageHoraire in plagesHoraires %}
                     {% if plageHoraire.numJour == jour %}
+
+                        <!-- Div pour afficher les informations de chaque plage horaire -->
                         <div class="plage-horaire{% if plageHoraire.nomPlage == 'matin' %} morning{% elseif plageHoraire.nomPlage == 'apres-midi' %} afternoon{% endif %}">
                             <div> Nom : {{ plageHoraire.nomPlage }} </div>
                             <div> Heure du début : {{ plageHoraire.debut.format('H:i') }} </div>

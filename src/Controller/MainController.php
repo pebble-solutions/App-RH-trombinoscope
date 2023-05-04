@@ -25,9 +25,9 @@ class MainController extends AbstractController
     }
 
     #[Route('/add', name: 'addPlageHoraire')]
-    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository,Request $request): Response
+    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request): Response
     {
-    //Formulaire pour ajouter un planning
+        //Formulaire pour ajouter un planning
         //TODO revoir ajout d'un etat par plage horaire et non pour la journée
         $plageHoraire = new PlageHoraire();
         $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
@@ -35,21 +35,21 @@ class MainController extends AbstractController
 
 
         //si soumis rentre en BDD
-        if($plageHoraireForm->isSubmitted()){
+        if ($plageHoraireForm->isSubmitted()) {
             $plageHoraireRepository->save($plageHoraire, true);
 
             //TODO Affiche message si bien enristré en BDD
             $this->addFlash('succes', "Plage Horaire Ajoutée !");
-           return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('main_home');
         }
 
-        return $this->render('main/add.html.twig',['plageHoraire' => $plageHoraire,
+        return $this->render('main/add.html.twig', ['plageHoraire' => $plageHoraire,
             'plageHoraireForm' => $plageHoraireForm->createView()
         ]);
 
     }
 
-    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+    #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
     public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
     {
         // Récupérer les données de l'employé
@@ -83,39 +83,13 @@ class MainController extends AbstractController
      */
     private function getEmploye(HttpClientInterface $client, int $id): array
     {
-        $url = 'http://172.17.0.2/public/employe/'.$id;
+        $url = 'http://172.17.0.2/public/employe/' . $id;
         $response = $client->request('GET', $url);
 
         return json_decode($response->getContent(), true);
     }
+
 }
-
-#[Route('/planning_type/', name: 'planning_type_')]
-class PlanningTypeController extends AbstractController
-{
-    #[Route('/employe/{id}', name: 'retrieve_one',requirements: ['id'=> '\d+'], methods: ["GET"])]
-    public function showEmployePlanning(int $id, HttpClientInterface $client): Response
-    {
-        // Récupérer les données de l'employé
-        $employe = $this->getEmploye($client, $id);
-
-        return $this->render('planning_type/show.html.twig', [
-            'employe' => $employe,
-        ]);
-    }
-
-    /**
-     * Récupère les données de l'employé depuis l'API
-     */
-    private function getEmploye(HttpClientInterface $client, int $id): array
-    {
-        $url = 'http://172.17.0.2/public/employe/'.$id;
-        $response = $client->request('GET', $url);
-
-        return json_decode($response->getContent(), true);
-    }
-
-
 //    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
 //    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
 //    {
@@ -137,4 +111,4 @@ class PlanningTypeController extends AbstractController
 //    }
 
 
-}
+
