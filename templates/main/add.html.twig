@@ -4,20 +4,24 @@
 
 {% block body %}
     <h2>Ajouter une Plage Horaire et un etat</h2>
-    {{ form_start(plageHoraireForm) }}
-    <div>
-    {{ form_widget(plageHoraireForm) }}
-    </div>
-
+    {{ form_row(plageHoraireForm.num_jour) }}
+    {{ form_row(plageHoraireForm.nom_plage) }}
+    {{ form_row(plageHoraireForm.debut) }}
+    {{ form_row(plageHoraireForm.fin) }}
+    {{ form_row(plageHoraireForm.etats) }}
     <button>Enregistrer</button>
     {{ form_end(plageHoraireForm) }}
 
 
-{#<h2>Ajouter Etat</h2>#}
-{#    {{ form_start(etatForm) }}#}
-{#    <div>#}
-{#        {{ form_widget(etatForm) }}#}
-{#    </div>#}
-{#    <button>Ajouter Etat !</button>#}
-{#    {{ form_end(etatForm) }}#}
+
 {% endblock %}
+
+
+{#    <h2>Ajouter une Plage Horaire et un etat</h2>#}
+{#    {{ form_start(plageHoraireForm) }}#}
+{#    <div>#}
+{#    {{ form_widget(plageHoraireForm) }}#}
+{#    </div>#}
+
+{#    <button>Enregistrer</button>#}
+{#    {{ form_end(plageHoraireForm) }}#}

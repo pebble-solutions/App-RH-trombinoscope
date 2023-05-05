@@ -24,6 +24,7 @@ class MainController extends AbstractController
         return $this->render('main/index.html.twig');
     }
 
+
     #[Route('/add', name: 'addPlageHoraire')]
     public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request): Response
     {

@@ -7,12 +7,14 @@ use App\Entity\PlageHoraire;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlageHoraireType extends AbstractType
+
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -30,13 +32,15 @@ class PlageHoraireType extends AbstractType
                 'mercredi' => '2' ,
                 'jeudi' => '3' ,
                 'vendredi' => '4' ,
+                'samedi' => '5' ,
+                'dimanche' => '6' ,
             ]])
             ->add('etats', EntityType::class, [
                 'class' => Etat::class,
                 'choice_label' => 'nom_etat',
                 'label' => 'État : ',
-                'multiple' => true,
-                'expanded' => true,
+                'multiple' => true, // changement de valeur pour la sélection unique
+                'expanded' => true, // changement de valeur pour les boutons radio
                 'required' => false,
             ]);
     }
