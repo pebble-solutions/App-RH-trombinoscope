@@ -1,20 +1,45 @@
-/* Style pour la grille */
+.fiche {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    display: inline-block;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.infos {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .fiche {
+        width: 100%;
+    }
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-auto-rows: minmax(50px, auto);
     grid-gap: 10px;
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid #ccc; /* Ajouter une bordure */
+    padding: 10px; /* Ajouter un espacement entre la bordure et les données du planning */
 }
 
 /* Style pour les cases */
 .morning {
     background-color: #F5DEB3; /* Couleur de fond */
-    padding: 10px; /* Espacement intérieur */
+    padding: 5px; /* Réduire l'espacement intérieur */
+    border: 1px solid #ccc; /* Ajouter une bordure */
 }
 
 .afternoon {
     background-color: #ADD8E6; /* Couleur de fond */
-    padding: 10px; /* Espacement intérieur */
+    padding: 5px; /* Réduire l'espacement intérieur */
+    border: 1px solid #ccc; /* Ajouter une bordure */
 }
 
 .jour-semaine {
