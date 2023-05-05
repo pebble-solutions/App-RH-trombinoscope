@@ -39,12 +39,55 @@ class PlageHoraireType extends AbstractType
                 'class' => Etat::class,
                 'choice_label' => 'nom_etat',
                 'label' => 'État : ',
-                'multiple' => true, // changement de valeur pour la sélection unique
-                'expanded' => true, // changement de valeur pour les boutons radio
+                'multiple' => true,
+                'expanded' => true,
                 'required' => false,
             ]);
     }
-
+//    public function buildForm(FormBuilderInterface $builder, array $options): void
+//    {
+//        $joursSemaine = [
+//            'lundi' => 0,
+//            'mardi' => 1,
+//            'mercredi' => 2,
+//            'jeudi' => 3,
+//            'vendredi' => 4,
+//            'samedi' => 5,
+//            'dimanche' => 6,
+//        ];
+//
+//        foreach ($joursSemaine as $jour => $value) {
+//            $builder->add('jour_'.$jour, ChoiceType::class, [
+//                'label' => ucfirst($jour),
+//                'mapped' => false,
+//                'choices' => [
+//                    'Matin' => 'matin',
+//                    'Après-Midi' => 'apres-midi',
+//                ],
+//                'required' => true,
+//                'label' => 'Plage horaire :',
+//            ]);
+//
+//            $builder->add('debut_'.$jour, TimeType::class, [
+//                'required' => true,
+//                'label' => 'Début :',
+//            ]);
+//
+//            $builder->add('fin_'.$jour, TimeType::class, [
+//                'required' => true,
+//                'label' => 'Fin :',
+//            ]);
+//
+//            $builder->add('etats_'.$jour, EntityType::class, [
+//                'class' => Etat::class,
+//                'choice_label' => 'nom_etat',
+//                'label' => 'État : ',
+//                'multiple' => true,
+//                'expanded' => true,
+//                'required' => false,
+//            ]);
+//        }
+//    }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
