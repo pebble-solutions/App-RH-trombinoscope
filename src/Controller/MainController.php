@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/', name: 'main_')]
 class MainController extends AbstractController
@@ -23,6 +24,7 @@ class MainController extends AbstractController
     {
         return $this->render('main/index.html.twig');
     }
+
 
 
     #[Route('/add', name: 'addPlageHoraire')]
@@ -50,8 +52,9 @@ class MainController extends AbstractController
 
     }
 
+
     #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
-    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
+    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): JsonResponse
     {
         // Récupérer les données de l'employé
         $employe = $this->getEmploye($client, $id);
@@ -75,9 +78,10 @@ class MainController extends AbstractController
             'plagesHoraires' => $plagesHoraires,
             'etats' => $etats,
         ]);
-
-        return $this->render('main/showPlanning.html.twig', $data);
+        //return $this->render('main/showPlanning.html.twig', $data);
+        return new JsonResponse($data);
     }
+
 
     /**
      * Récupère les données de l'employé depuis l'API
@@ -108,6 +112,51 @@ class MainController extends AbstractController
 //            'planningType' => $planningType,
 //            'plagesHoraires' => $plagesHoraires,
 //            'etats' => $etats,
+//        ]);
+//    }
+
+//    #[Route('/add', name: 'addPlageHoraire')]
+//    public function addPlageHoraire(
+//        PlageHoraireRepository $plageHoraireRepository,
+//        PlanningTypeRepository $planningTypeRepository,
+//        EtatRepository $etatRepository,
+//        Request $request
+//    ): Response {
+//        // Formulaire pour ajouter une plage horaire
+//        $plageHoraire = new PlageHoraire();
+//        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
+//        $plageHoraireForm->handleRequest($request);
+//
+//        // Si le formulaire est soumis, ajouter la plage horaire à la BDD
+//        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//
+//            // Récupérer l'objet PlanningType correspondant
+//            $planningTypeId = $plageHoraireForm->get('planningType')->getData();
+//            $planningType = $planningTypeRepository->find($planningTypeId);
+//
+//            // Ajouter la plage horaire au PlanningType
+//            $planningType->addPlageHoraire($plageHoraire);
+//            $em->persist($planningType);
+//
+//            // Récupérer l'objet Etat correspondant
+//            $etatId = $plageHoraireForm->get('etat')->getData();
+//            $etat = $etatRepository->find($etatId);
+//
+//            // Ajouter l'Etat à la PlageHoraire
+//            $plageHoraire->setEtat($etat);
+//            $em->persist($plageHoraire);
+//
+//            $em->flush();
+//
+//            // Afficher un message de succès et rediriger vers la page d'accueil
+//            $this->addFlash('success', 'Plage horaire ajoutée avec succès !');
+//            return $this->redirectToRoute('main_home');
+//        }
+//
+//        return $this->render('main/add.html.twig', [
+//            'plageHoraire' => $plageHoraire,
+//            'plageHoraireForm' => $plageHoraireForm->createView()
 //        ]);
 //    }
 
