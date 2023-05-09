@@ -32,6 +32,20 @@ class PlanningTypeController extends AbstractController
 
         return json_decode($response->getContent(), true);
     }
+
+//
+//    /**
+//     * Récupère les données du planning depuis l'API
+//     */
+//    private function getPlanning(HttpClientInterface $client, int $id): array
+//    {
+//        $url = 'http://172.17.0.3/public/showPlanning/' . $id;
+//        $response = $client->request('GET', $url);
+//
+//        return json_decode($response->getContent(), true);
+//    }
+
+
 //
 //#[Route('/planning_type/', name: 'planning_type_')]
 //class PlanningTypeController extends AbstractController

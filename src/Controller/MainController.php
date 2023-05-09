@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 #[Route('/', name: 'main_')]
 class MainController extends AbstractController
 {
@@ -24,7 +23,6 @@ class MainController extends AbstractController
     {
         return $this->render('main/index.html.twig');
     }
-
 
 
     #[Route('/add', name: 'addPlageHoraire')]
@@ -52,6 +50,36 @@ class MainController extends AbstractController
 
     }
 
+//    #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
+//    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
+//    {
+//        // Récupérer les données de l'employé
+//        $employe = $this->getEmploye($client, $id);
+//
+//        // Récupérer les données du planning type
+//        $planningType = $planningTypeRepository->find($id);
+//
+//        // Récupérer les plages horaires pour le planning type donné
+//        $plagesHoraires = $planningType->getPlagesHoraires();
+//
+//        // Récupérer les états liés à chaque plage horaire
+//        $etats = [];
+//        foreach ($plagesHoraires as $plageHoraire) {
+//            $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
+//        }
+//
+//        // Fusionner les tableaux associatifs des données
+//        $data = array_merge([
+//            'employe' => $employe,
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
+//        ]);
+//
+//        return $this->render('main/showPlanning.html.twig', $data);
+//
+//    }
+//
 
     #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
     public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): JsonResponse
@@ -78,11 +106,9 @@ class MainController extends AbstractController
             'plagesHoraires' => $plagesHoraires,
             'etats' => $etats,
         ]);
-        //return $this->render('main/showPlanning.html.twig', $data);
+
         return new JsonResponse($data);
     }
-
-
     /**
      * Récupère les données de l'employé depuis l'API
      */
@@ -95,6 +121,11 @@ class MainController extends AbstractController
     }
 
 }
+
+
+
+
+
 //    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
 //    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
 //    {
@@ -114,7 +145,6 @@ class MainController extends AbstractController
 //            'etats' => $etats,
 //        ]);
 //    }
-
 //    #[Route('/add', name: 'addPlageHoraire')]
 //    public function addPlageHoraire(
 //        PlageHoraireRepository $plageHoraireRepository,
