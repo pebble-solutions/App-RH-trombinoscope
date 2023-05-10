@@ -6,6 +6,7 @@ use App\Repository\PlanningTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlanningTypeRepository::class)]
 class PlanningType
@@ -13,15 +14,19 @@ class PlanningType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("planning_api")]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups("planning_api")]
     private ?int $idEmploye = null;
 
     #[ORM\ManyToMany(targetEntity: PlageHoraire::class, inversedBy: 'planningTypes')]
+    #[Groups("planning_api")]
     private Collection $plagesHoraires;
 
     #[ORM\Column(length: 255)]
+    #[Groups("planning_api")]
     private ?string $inom = null;
 
     public function __construct()
@@ -81,4 +86,6 @@ class PlanningType
 
         return $this;
     }
+
+
 }
