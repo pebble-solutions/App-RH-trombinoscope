@@ -40,9 +40,9 @@ class PlageHoraireType extends AbstractType
                 'class' => Etat::class,
                 'choice_label' => 'nom_etat',
                 'label' => 'État : ',
-                'multiple' => true,
+                'multiple' => false,
                 'expanded' => true,
-                'required' => false,
+                'required' => true,
             ]);
     }
 //    public function buildForm(FormBuilderInterface $builder, array $options): void

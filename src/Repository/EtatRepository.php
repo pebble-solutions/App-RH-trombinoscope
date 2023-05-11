@@ -45,21 +45,21 @@ class EtatRepository extends ServiceEntityRepository
      * @param PlageHoraire $plageHoraire la plage horaire pour laquelle chercher l'état
      * @return Etat|null l'état correspondant à la plage horaire donnée ou null si aucun n'a été trouvé
      */
-    public function findByPlageHoraires(PlageHoraire $plageHoraire): ?Etat
-    {
-        // Créer une instance de QueryBuilder pour construire la requête SQL
-        $qb = $this->createQueryBuilder('e')
-
-            // Joindre la table PlageHoraire en utilisant l'alias 'ph'
-            ->join('e.plageHoraires', 'ph')
-
-            // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant de la plage horaire
-            ->andWhere('ph.id = :plageHoraireId')
-            ->setParameter('plageHoraireId', $plageHoraire->getId());
-
-        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder et getOneOrNullResult() pour récupérer un seul objet ou null
-        return $qb->getQuery()->getOneOrNullResult();
-    }
+//    public function findByPlageHoraires(PlageHoraire $plageHoraire): ?Etat
+//    {
+//        // Créer une instance de QueryBuilder pour construire la requête SQL
+//        $qb = $this->createQueryBuilder('e')
+//
+//            // Joindre la table PlageHoraire en utilisant l'alias 'ph'
+//            ->join('e.plageHoraires', 'ph')
+//
+//            // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant de la plage horaire
+//            ->andWhere('ph.id = :plageHoraireId')
+//            ->setParameter('plageHoraireId', $plageHoraire->getId());
+//
+//        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder et getOneOrNullResult() pour récupérer un seul objet ou null
+//        return $qb->getQuery()->getOneOrNullResult();
+//    }
 
 //    /**
 //     * @return Etat[] Returns an array of Etat objects
