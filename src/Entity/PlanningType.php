@@ -21,8 +21,8 @@ class PlanningType
     #[Groups("planning_api")]
     private ?int $idEmploye = null;
 
+
     #[ORM\ManyToMany(targetEntity: PlageHoraire::class, inversedBy: 'planningTypes')]
-    #[Groups("planning_api")]
     private Collection $plagesHoraires;
 
     #[ORM\Column(length: 255)]

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlageHoraireRepository::class)]
 class PlageHoraire
@@ -14,18 +15,23 @@ class PlageHoraire
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("planning_api")]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups("planning_api")]
     private ?string $nomPlage = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups("planning_api")]
     private ?\DateTimeInterface $debut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups("planning_api")]
     private ?\DateTimeInterface $fin = null;
 
     #[ORM\Column]
+    #[Groups("planning_api")]
     private ?int $numJour = null;
 
     #[ORM\ManyToMany(targetEntity: PlanningType::class, mappedBy: 'plagesHoraires')]

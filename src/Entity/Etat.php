@@ -14,9 +14,11 @@ class Etat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("planning_api")]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups("planning_api")]
     private ?string $nomEtat = null;
 
     #[ORM\ManyToMany(targetEntity: PlageHoraire::class, mappedBy: 'etats')]

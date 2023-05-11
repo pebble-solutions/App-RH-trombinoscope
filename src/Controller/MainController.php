@@ -109,7 +109,8 @@ class MainController extends AbstractController
 //            'etats' => $etats,
 //        ]);
 //
-//        return new JsonResponse($data);
+//       return new JsonResponse($data);
+//
 //    }
 //    /**
 //     * Récupère les données de l'employé depuis l'API
@@ -135,21 +136,21 @@ class MainController extends AbstractController
         foreach ($plagesHoraires as $plageHoraire) {
             $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
         }
-//        return $this->json([
-//            'planningType' => $planningType, 200,[], ["groups"=>"planning_api"],
-//            'plagesHoraires' => $plagesHoraires,
-//            'etats' => $etats,
-//        ]);
+        return $this->json([
+            'planningType' => $planningType,
+            'plagesHoraires' => $plagesHoraires,
+            'etats' => $etats,
+        ], 200, [], ['groups' => 'planning_api']);
         return new JsonResponse([
             'planningType' => $planningType,
             'plagesHoraires' => $plagesHoraires,
             'etats' => $etats,
         ]);
-//        return $this->render('main/showPlanning.html.twig', [
-//            'planningType' => $planningType,
-//            'plagesHoraires' => $plagesHoraires,
-//            'etats' => $etats,
-//        ]);
+        return $this->render('main/showPlanning.html.twig', [
+            'planningType' => $planningType,
+            'plagesHoraires' => $plagesHoraires,
+            'etats' => $etats,
+        ]);
     }}
 
 
