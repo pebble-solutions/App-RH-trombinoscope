@@ -34,11 +34,14 @@ class PlageHoraire
     #[Groups("planning_api")]
     private ?int $numJour = null;
 
-    #[ORM\ManyToMany(targetEntity: PlanningType::class, mappedBy: 'plagesHoraires')]
-    private Collection $planningTypes;
 
-    #[ORM\ManyToMany(targetEntity: Etat::class, inversedBy: 'plageHoraires')]
-    private Collection $etats;
+    #[ORM\ManyToOne(inversedBy: 'PlageHoraire')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PlanningType $planningType = null;
+
+    #[ORM\ManyToOne(inversedBy: 'plageHoraires')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etat $Etats = null;
 
     public function __construct()
     {
@@ -100,53 +103,47 @@ class PlageHoraire
         return $this;
     }
 
-    /**
-     * @return Collection<int, PlanningType>
-     */
-    public function getPlanningTypes(): Collection
+//
+//    public function addPlanningType(PlanningType $planningType): self
+//    {
+//        if (!$this->planningTypes->contains($planningType)) {
+//            $this->planningTypes->add($planningType);
+//            $planningType->addPlagesHoraire($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removePlanningType(PlanningType $planningType): self
+//    {
+//        if ($this->planningTypes->removeElement($planningType)) {
+//            $planningType->removePlagesHoraire($this);
+//        }
+//
+//        return $this;
+//    }
+
+
+    public function getPlanningType(): ?PlanningType
     {
-        return $this->planningTypes;
+        return $this->planningType;
     }
 
-    public function addPlanningType(PlanningType $planningType): self
+    public function setPlanningType(?PlanningType $planningType): self
     {
-        if (!$this->planningTypes->contains($planningType)) {
-            $this->planningTypes->add($planningType);
-            $planningType->addPlagesHoraire($this);
-        }
+        $this->planningType = $planningType;
 
         return $this;
     }
 
-    public function removePlanningType(PlanningType $planningType): self
+    public function getEtats(): ?Etat
     {
-        if ($this->planningTypes->removeElement($planningType)) {
-            $planningType->removePlagesHoraire($this);
-        }
-
-        return $this;
+        return $this->Etats;
     }
 
-    /**
-     * @return Collection<int, Etat>
-     */
-    public function getEtats(): Collection
+    public function setEtats(?Etat $Etats): self
     {
-        return $this->etats;
-    }
-
-    public function addEtat(Etat $etat): self
-    {
-        if (!$this->etats->contains($etat)) {
-            $this->etats->add($etat);
-        }
-
-        return $this;
-    }
-
-    public function removeEtat(Etat $etat): self
-    {
-        $this->etats->removeElement($etat);
+        $this->Etats = $Etats;
 
         return $this;
     }

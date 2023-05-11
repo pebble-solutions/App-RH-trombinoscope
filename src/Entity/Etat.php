@@ -21,8 +21,9 @@ class Etat
     #[Groups("planning_api")]
     private ?string $nomEtat = null;
 
-    #[ORM\ManyToMany(targetEntity: PlageHoraire::class, mappedBy: 'etats')]
+    #[ORM\OneToMany(mappedBy: 'Etats', targetEntity: PlageHoraire::class, orphanRemoval: true)]
     private Collection $plageHoraires;
+
 
     public function __construct()
     {
@@ -46,32 +47,55 @@ class Etat
         return $this;
     }
 
-    /**
-     * @return Collection<int, PlageHoraire>
-     */
-    public function getPlageHoraires(): Collection
-    {
-        return $this->plageHoraires;
+
+//    public function addPlageHoraire(PlageHoraire $plageHoraire): self
+//    {
+//        if (!$this->plageHoraires->contains($plageHoraire)) {
+//            $this->plageHoraires->add($plageHoraire);
+//            $plageHoraire->addEtat($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removePlageHoraire(PlageHoraire $plageHoraire): self
+//    {
+//        if ($this->plageHoraires->removeElement($plageHoraire)) {
+//            $plageHoraire->removeEtat($this);
+//        }
+//
+//        return $this;
+//    }
+
+/**
+ * @return Collection<int, PlageHoraire>
+ */
+public function getPlageHoraires(): Collection
+{
+    return $this->plageHoraires;
+}
+
+public function addPlageHoraire(PlageHoraire $plageHoraire): self
+{
+    if (!$this->plageHoraires->contains($plageHoraire)) {
+        $this->plageHoraires->add($plageHoraire);
+        $plageHoraire->setEtats($this);
     }
 
-    public function addPlageHoraire(PlageHoraire $plageHoraire): self
-    {
-        if (!$this->plageHoraires->contains($plageHoraire)) {
-            $this->plageHoraires->add($plageHoraire);
-            $plageHoraire->addEtat($this);
+    return $this;
+}
+
+public function removePlageHoraire(PlageHoraire $plageHoraire): self
+{
+    if ($this->plageHoraires->removeElement($plageHoraire)) {
+        // set the owning side to null (unless already changed)
+        if ($plageHoraire->getEtats() === $this) {
+            $plageHoraire->setEtats(null);
         }
-
-        return $this;
     }
 
-    public function removePlageHoraire(PlageHoraire $plageHoraire): self
-    {
-        if ($this->plageHoraires->removeElement($plageHoraire)) {
-            $plageHoraire->removeEtat($this);
-        }
-
-        return $this;
-    }
+    return $this;
+}
 
 
 

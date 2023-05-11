@@ -22,16 +22,17 @@ class PlanningType
     private ?int $idEmploye = null;
 
 
-    #[ORM\ManyToMany(targetEntity: PlageHoraire::class, inversedBy: 'planningTypes')]
-    private Collection $plagesHoraires;
-
     #[ORM\Column(length: 255)]
     #[Groups("planning_api")]
     private ?string $inom = null;
 
+    #[ORM\OneToMany(mappedBy: 'planningType', targetEntity: PlageHoraire::class, orphanRemoval: true)]
+    private Collection $PlagesHoraires;
+
     public function __construct()
     {
         $this->plagesHoraires = new ArrayCollection();
+        //$this->PlageHoraire = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,29 +52,6 @@ class PlanningType
         return $this;
     }
 
-    /**
-     * @return Collection<int, PlageHoraire>
-     */
-    public function getPlagesHoraires(): Collection
-    {
-        return $this->plagesHoraires;
-    }
-
-    public function addPlagesHoraire(PlageHoraire $plagesHoraire): self
-    {
-        if (!$this->plagesHoraires->contains($plagesHoraire)) {
-            $this->plagesHoraires->add($plagesHoraire);
-        }
-
-        return $this;
-    }
-
-    public function removePlagesHoraire(PlageHoraire $plagesHoraire): self
-    {
-        $this->plagesHoraires->removeElement($plagesHoraire);
-
-        return $this;
-    }
 
     public function getInom(): ?string
     {
@@ -83,6 +61,36 @@ class PlanningType
     public function setInom(string $inom): self
     {
         $this->inom = $inom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlageHoraire>
+     */
+    public function getPlagesHoraires(): Collection
+    {
+        return $this->PlagesHoraires;
+    }
+
+    public function addPlagesHoraire(PlageHoraire $plagesHoraire): self
+    {
+        if (!$this->PlagesHoraires->contains($plagesHoraire)) {
+            $this->PlagesHoraires->add($plagesHoraire);
+            $plagesHoraire->setPlanningType($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlagesHoraire(PlageHoraire $plagesHoraire): self
+    {
+        if ($this->PlagesHoraires->removeElement($plagesHoraire)) {
+            // set the owning side to null (unless already changed)
+            if ($plagesHoraire->getPlanningType() === $this) {
+                $plagesHoraire->setPlanningType(null);
+            }
+        }
 
         return $this;
     }

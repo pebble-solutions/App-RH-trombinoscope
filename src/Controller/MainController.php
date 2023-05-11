@@ -141,16 +141,16 @@ class MainController extends AbstractController
             'plagesHoraires' => $plagesHoraires,
             'etats' => $etats,
         ], 200, [], ['groups' => 'planning_api']);
-        return new JsonResponse([
-            'planningType' => $planningType,
-            'plagesHoraires' => $plagesHoraires,
-            'etats' => $etats,
-        ]);
-        return $this->render('main/showPlanning.html.twig', [
-            'planningType' => $planningType,
-            'plagesHoraires' => $plagesHoraires,
-            'etats' => $etats,
-        ]);
+//        return new JsonResponse([
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
+//        ]);
+//        return $this->render('main/showPlanning.html.twig', [
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
+//        ]);
     }}
 
 
