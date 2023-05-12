@@ -19,7 +19,7 @@ class PlageHoraireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
+            ->add('planningType', PlanningFormType::class, ['label' => 'Nom : '])
             ->add('nom_plage',ChoiceType::class, ['choices' => [
                 'Matin' => 'matin' ,
                 'Après-Midi' => 'apres-midi' ,
@@ -43,7 +43,8 @@ class PlageHoraireType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
                 'required' => true,
-            ]);
+            ])
+            ->add('planningType', PlanningFormType::class);
     }
 //    public function buildForm(FormBuilderInterface $builder, array $options): void
 //    {

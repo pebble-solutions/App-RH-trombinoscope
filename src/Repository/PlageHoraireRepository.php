@@ -44,7 +44,7 @@ class PlageHoraireRepository extends ServiceEntityRepository
         // Créer une instance de QueryBuilder pour construire la requête SQL
         $qb = $this->createQueryBuilder('e')
 
-            // Joindre la table PlanningType en utilisant l'alias 'pt'
+            // Joindre la table PlanningFormType en utilisant l'alias 'pt'
             ->join('e.planningTypes', 'pt')
 
             // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant du planning Type

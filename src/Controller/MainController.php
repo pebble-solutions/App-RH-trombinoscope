@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\PlageHoraire;
+use App\Entity\PlanningType;
 use App\Form\EtatType;
 use App\Form\PlageHoraireType;
+use App\Form\PlanningFormType;
 use App\Repository\EtatRepository;
 use App\Repository\PlageHoraireRepository;
 use App\Repository\PlanningTypeRepository;
@@ -18,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
 #[Route('/', name: 'main_')]
 class MainController extends AbstractController
 {
@@ -26,75 +29,72 @@ class MainController extends AbstractController
     {
         return $this->render('main/index.html.twig');
     }
-//    #[Route('/add', name: 'addPlageHoraire')]
-//    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request, EtatRepository $etatRepository, PlanningTypeRepository $planningTypeRepository): Response
-//    {
-//        $plageHoraire = new PlageHoraire();
-//        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
-//        $plageHoraireForm->handleRequest($request);
-//
-//        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
-//            // Récupérer l'état sélectionné dans le formulaire
-//            $etatId = $request->request->get('plage_horaire')['etats'];
-//
-//            // Récupérer l'état correspondant en base de données
-//            $etat = $etatRepository->find($etatId);
-//
-//            // Associer l'état à la plage horaire
-//            $plageHoraire->setEtat($etat);
-//
-//            // Récupérer l'ID du planning correspondant
-//            $planningId = $request->request->get('plage_horaire')['planning'];
-//
-//            // Récupérer le planning correspondant en base de données
-//            $planning = $planningTypeRepository->find($planningId);
-//
-//            // Ajouter la plage horaire à la liste des PlageHoraires du Planning
-//            $planning->addPlagesHoraire($plageHoraire);
-//
-//            // Enregistrer le Planning et la PlageHoraire en utilisant le même EntityManager
-//            $entityManager = $this->getDoctrine()->getManager();
-//            $entityManager->persist($planning);
-//            $entityManager->persist($plageHoraire);
-//            $entityManager->flush();
-//
-//            //  $this->addFlash('success', "Plage Horaire Ajoutée !");
-//            return $this->redirectToRoute('main_home');
-//        }
-//
-//        return $this->render('main/add.html.twig', [
-//            'plageHoraire' => $plageHoraire,
-//            'plageHoraireForm' => $plageHoraireForm->createView(),
-//        ]);
-//    }
 
-
-
-
-    #[Route('/add', name: 'addPlageHoraire')]
-    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request): Response
+    #[Route('/add/{idEmploye}', name: 'addPlageHoraire')]
+    public function addPlageHoraire(
+        PlageHoraireRepository $plageHoraireRepository,
+        PlanningTypeRepository $planningTypeRepository,
+        Request $request,
+        int $idEmploye
+    ): Response
     {
-        //Formulaire pour ajouter un planning
-        //TODO revoir ajout d'un etat par plage horaire et non pour la journée
+        // Récupérer le planningType correspondant à l'employé associé à l'ID
+        $planningType = $planningTypeRepository->findOneBy(['idEmploye' => $idEmploye]);
+
         $plageHoraire = new PlageHoraire();
+        $plageHoraire->setPlanningType($planningType); // Associer le planningType à la nouvelle plage horaire
         $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
+
         $plageHoraireForm->handleRequest($request);
 
-
-        //si soumis rentre en BDD
-        if ($plageHoraireForm->isSubmitted()) {
+        // Si le formulaire est soumis et valide, enregistrer les données en base de données
+        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
             $plageHoraireRepository->save($plageHoraire, true);
 
-            //TODO Affiche message si bien enristré en BDD
-            $this->addFlash('succes', "Plage Horaire Ajoutée !");
+            $this->addFlash('success', "Plage Horaire Ajoutée !");
             return $this->redirectToRoute('main_home');
         }
 
-        return $this->render('main/add.html.twig', ['plageHoraire' => $plageHoraire,
+        return $this->render('main/add.html.twig', [
+            'plageHoraire' => $plageHoraire,
             'plageHoraireForm' => $plageHoraireForm->createView()
         ]);
-
     }
+
+//Affiche uniquement le planning suivant son id
+    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
+    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
+    {
+        $planningType = $planningTypeRepository->find($id);
+        // Récupérer les plages horaires pour le planning type donné
+        $plagesHoraires = $planningType->getPlagesHoraires();
+
+        // Récupérer les états liés à chaque plage horaire
+        $etats = [];
+        foreach ($plagesHoraires as $plageHoraire) {
+            $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
+        }
+        return $this->json([
+            'planningType' => $planningType,
+            'plagesHoraires' => $plagesHoraires,
+            'etats' => $etats,
+        ], 200, [], ['groups' => 'planning_api']);
+//        return new JsonResponse([
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
+//        ]);
+//        return $this->render('main/showPlanning.html.twig', [
+//            'planningType' => $planningType,
+//            'plagesHoraires' => $plagesHoraires,
+//            'etats' => $etats,
+//        ]);
+    }}
+
+
+
+
+
 //Retourne l'employé et le planning sous forme de vue html et css
 //    #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
 //    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
@@ -167,73 +167,26 @@ class MainController extends AbstractController
 //        return json_decode($response->getContent(), true);
 //    }
 
-//Affiche uniquement le planning suivant son id
-    #[Route('/showPlanning/{id}', name: 'showPlanning',requirements: ['id'=> '\d+'])]
-    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository ): Response
-    {
-        $planningType = $planningTypeRepository->find($id);
-        // Récupérer les plages horaires pour le planning type donné
-        $plagesHoraires = $planningType->getPlagesHoraires();
-
-        // Récupérer les états liés à chaque plage horaire
-        $etats = [];
-        foreach ($plagesHoraires as $plageHoraire) {
-            $etats[$plageHoraire->getId()] = $etatRepository->findByPlageHoraires($plageHoraire);
-        }
-        return $this->json([
-            'planningType' => $planningType,
-            'plagesHoraires' => $plagesHoraires,
-            'etats' => $etats,
-        ], 200, [], ['groups' => 'planning_api']);
-//        return new JsonResponse([
-//            'planningType' => $planningType,
-//            'plagesHoraires' => $plagesHoraires,
-//            'etats' => $etats,
-//        ]);
-//        return $this->render('main/showPlanning.html.twig', [
-//            'planningType' => $planningType,
-//            'plagesHoraires' => $plagesHoraires,
-//            'etats' => $etats,
-//        ]);
-    }}
 
 
-//    #[Route('/add', name: 'addPlageHoraire')]
-//    public function addPlageHoraire(
-//        PlageHoraireRepository $plageHoraireRepository,
-//        PlanningTypeRepository $planningTypeRepository,
-//        EtatRepository $etatRepository,
-//        Request $request
-//    ): Response {
-//        // Formulaire pour ajouter une plage horaire
+
+//
+//    #[Route('/add/{idEmploye}', name: 'addPlageHoraire')]
+//    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request, int $idEmploye): Response
+//    {
+//        //Formulaire pour ajouter un planning
 //        $plageHoraire = new PlageHoraire();
+//        $planningType = new PlanningType();
+//        $planningType->setIdEmploye($idEmploye);
+//        $plageHoraire->setPlanningType($planningType);
 //        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
 //        $plageHoraireForm->handleRequest($request);
 //
-//        // Si le formulaire est soumis, ajouter la plage horaire à la BDD
+//        //si soumis rentre en BDD
 //        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
+//            $plageHoraireRepository->save($plageHoraire, true);
 //
-//            // Récupérer l'objet PlanningType correspondant
-//            $planningTypeId = $plageHoraireForm->get('planningType')->getData();
-//            $planningType = $planningTypeRepository->find($planningTypeId);
-//
-//            // Ajouter la plage horaire au PlanningType
-//            $planningType->addPlageHoraire($plageHoraire);
-//            $em->persist($planningType);
-//
-//            // Récupérer l'objet Etat correspondant
-//            $etatId = $plageHoraireForm->get('etat')->getData();
-//            $etat = $etatRepository->find($etatId);
-//
-//            // Ajouter l'Etat à la PlageHoraire
-//            $plageHoraire->setEtat($etat);
-//            $em->persist($plageHoraire);
-//
-//            $em->flush();
-//
-//            // Afficher un message de succès et rediriger vers la page d'accueil
-//            $this->addFlash('success', 'Plage horaire ajoutée avec succès !');
+//            $this->addFlash('success', "Plage Horaire Ajoutée !");
 //            return $this->redirectToRoute('main_home');
 //        }
 //

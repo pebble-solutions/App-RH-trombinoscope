@@ -40,7 +40,7 @@ class PlanningTypeRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return PlanningType[] Returns an array of PlanningType objects
+//     * @return PlanningFormType[] Returns an array of PlanningFormType objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class PlanningTypeRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?PlanningType
+//    public function findOneBySomeField($value): ?PlanningFormType
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

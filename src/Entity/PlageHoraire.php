@@ -104,7 +104,7 @@ class PlageHoraire
     }
 
 //
-//    public function addPlanningType(PlanningType $planningType): self
+//    public function addPlanningType(PlanningFormType $planningType): self
 //    {
 //        if (!$this->planningTypes->contains($planningType)) {
 //            $this->planningTypes->add($planningType);
@@ -114,7 +114,7 @@ class PlageHoraire
 //        return $this;
 //    }
 //
-//    public function removePlanningType(PlanningType $planningType): self
+//    public function removePlanningType(PlanningFormType $planningType): self
 //    {
 //        if ($this->planningTypes->removeElement($planningType)) {
 //            $planningType->removePlagesHoraire($this);
