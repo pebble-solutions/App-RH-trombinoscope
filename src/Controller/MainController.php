@@ -26,75 +26,75 @@ class MainController extends AbstractController
     {
         return $this->render('main/index.html.twig');
     }
-    #[Route('/add', name: 'addPlageHoraire')]
-    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request, EtatRepository $etatRepository, PlanningTypeRepository $planningTypeRepository): Response
-    {
-        $plageHoraire = new PlageHoraire();
-        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
-        $plageHoraireForm->handleRequest($request);
-
-        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
-            // Récupérer l'état sélectionné dans le formulaire
-            $etatId = $request->request->get('plage_horaire')['etats'];
-
-            // Récupérer l'état correspondant en base de données
-            $etat = $etatRepository->find($etatId);
-
-            // Associer l'état à la plage horaire
-            $plageHoraire->setEtat($etat);
-
-            // Récupérer l'ID du planning correspondant
-            $planningId = $request->request->get('plage_horaire')['planning'];
-
-            // Récupérer le planning correspondant en base de données
-            $planning = $planningTypeRepository->find($planningId);
-
-            // Ajouter la plage horaire à la liste des PlageHoraires du Planning
-            $planning->addPlagesHoraire($plageHoraire);
-
-            // Enregistrer le Planning et la PlageHoraire en utilisant le même EntityManager
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($planning);
-            $entityManager->persist($plageHoraire);
-            $entityManager->flush();
-
-            //  $this->addFlash('success', "Plage Horaire Ajoutée !");
-            return $this->redirectToRoute('main_home');
-        }
-
-        return $this->render('main/add.html.twig', [
-            'plageHoraire' => $plageHoraire,
-            'plageHoraireForm' => $plageHoraireForm->createView(),
-        ]);
-    }
-
-
-
-
 //    #[Route('/add', name: 'addPlageHoraire')]
-//    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request): Response
+//    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request, EtatRepository $etatRepository, PlanningTypeRepository $planningTypeRepository): Response
 //    {
-//        //Formulaire pour ajouter un planning
-//        //TODO revoir ajout d'un etat par plage horaire et non pour la journée
 //        $plageHoraire = new PlageHoraire();
 //        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
 //        $plageHoraireForm->handleRequest($request);
 //
+//        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
+//            // Récupérer l'état sélectionné dans le formulaire
+//            $etatId = $request->request->get('plage_horaire')['etats'];
 //
-//        //si soumis rentre en BDD
-//        if ($plageHoraireForm->isSubmitted()) {
-//            $plageHoraireRepository->save($plageHoraire, true);
+//            // Récupérer l'état correspondant en base de données
+//            $etat = $etatRepository->find($etatId);
 //
-//            //TODO Affiche message si bien enristré en BDD
-//            $this->addFlash('succes', "Plage Horaire Ajoutée !");
+//            // Associer l'état à la plage horaire
+//            $plageHoraire->setEtat($etat);
+//
+//            // Récupérer l'ID du planning correspondant
+//            $planningId = $request->request->get('plage_horaire')['planning'];
+//
+//            // Récupérer le planning correspondant en base de données
+//            $planning = $planningTypeRepository->find($planningId);
+//
+//            // Ajouter la plage horaire à la liste des PlageHoraires du Planning
+//            $planning->addPlagesHoraire($plageHoraire);
+//
+//            // Enregistrer le Planning et la PlageHoraire en utilisant le même EntityManager
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->persist($planning);
+//            $entityManager->persist($plageHoraire);
+//            $entityManager->flush();
+//
+//            //  $this->addFlash('success', "Plage Horaire Ajoutée !");
 //            return $this->redirectToRoute('main_home');
 //        }
 //
-//        return $this->render('main/add.html.twig', ['plageHoraire' => $plageHoraire,
-//            'plageHoraireForm' => $plageHoraireForm->createView()
+//        return $this->render('main/add.html.twig', [
+//            'plageHoraire' => $plageHoraire,
+//            'plageHoraireForm' => $plageHoraireForm->createView(),
 //        ]);
-//
 //    }
+
+
+
+
+    #[Route('/add', name: 'addPlageHoraire')]
+    public function addPlageHoraire(PlageHoraireRepository $plageHoraireRepository, Request $request): Response
+    {
+        //Formulaire pour ajouter un planning
+        //TODO revoir ajout d'un etat par plage horaire et non pour la journée
+        $plageHoraire = new PlageHoraire();
+        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
+        $plageHoraireForm->handleRequest($request);
+
+
+        //si soumis rentre en BDD
+        if ($plageHoraireForm->isSubmitted()) {
+            $plageHoraireRepository->save($plageHoraire, true);
+
+            //TODO Affiche message si bien enristré en BDD
+            $this->addFlash('succes', "Plage Horaire Ajoutée !");
+            return $this->redirectToRoute('main_home');
+        }
+
+        return $this->render('main/add.html.twig', ['plageHoraire' => $plageHoraire,
+            'plageHoraireForm' => $plageHoraireForm->createView()
+        ]);
+
+    }
 //Retourne l'employé et le planning sous forme de vue html et css
 //    #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
 //    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository, HttpClientInterface $client): Response
