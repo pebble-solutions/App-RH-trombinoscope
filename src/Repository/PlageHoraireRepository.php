@@ -39,21 +39,29 @@ class PlageHoraireRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function findByPlanningTypes(PlanningType $planningType): ?PlageHoraire
+    public function findByPlanningType(PlanningType $planningType): ?array
     {
-        // Créer une instance de QueryBuilder pour construire la requête SQL
-        $qb = $this->createQueryBuilder('e')
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.planningType = :planningType')
+            ->setParameter('planningType', $planningType);
 
-            // Joindre la table PlanningFormType en utilisant l'alias 'pt'
-            ->join('e.planningTypes', 'pt')
-
-            // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant du planning Type
-            ->andWhere('pt.id = :planningTypeId')
-            ->setParameter('planningTypeId', $planningType->getId());
-
-        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder et getOneOrNullResult() pour récupérer un seul objet ou null
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->getResult();
     }
+//    public function findByPlanningTypes(PlanningType $planningType): ?PlageHoraire
+//    {
+//        // Créer une instance de QueryBuilder pour construire la requête SQL
+//        $qb = $this->createQueryBuilder('e')
+//
+//            // Joindre la table PlanningFormType en utilisant l'alias 'pt'
+//            ->join('e.planningTypes', 'pt')
+//
+//            // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant du planning Type
+//            ->andWhere('pt.id = :planningTypeId')
+//            ->setParameter('planningTypeId', $planningType->getId());
+//
+//        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder et getOneOrNullResult() pour récupérer un seul objet ou null
+//        return $qb->getQuery()->getOneOrNullResult();
+//    }
 //    /**
 //     * @return PlageHoraire[] Returns an array of PlageHoraire objects
 //     */

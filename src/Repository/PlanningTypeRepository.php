@@ -38,6 +38,10 @@ class PlanningTypeRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findByEmployeId(int $employeId): ?PlanningType
+    {
+        return $this->findOneBy(['idEmploye' => $employeId]);
+    }
 
 //    /**
 //     * @return PlanningFormType[] Returns an array of PlanningFormType objects
