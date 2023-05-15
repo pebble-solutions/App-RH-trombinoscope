@@ -2,24 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\PlageHoraire;
-use App\Entity\PlanningType;
-use App\Form\EtatType;
 use App\Form\PlageHoraireType;
-use App\Form\PlanningFormType;
 use App\Repository\EtatRepository;
 use App\Repository\PlageHoraireRepository;
 use App\Repository\PlanningTypeRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 #[Route('/', name: 'main_')]
 class MainController extends AbstractController
@@ -58,6 +50,7 @@ class MainController extends AbstractController
             // Enregistrer les données dans les différentes tables de la base de données
             $planningTypeRepository->save($planningType, true);
             $plageHoraireRepository->save($plageHoraire, true);
+            $etatRepository->save($etat,true);
 
             $this->addFlash('success', "Plage Horaire Ajoutée !");
             return $this->redirectToRoute('main_home');
@@ -68,6 +61,56 @@ class MainController extends AbstractController
             'plageHoraireForm' => $plageHoraireForm->createView()
         ]);
     }
+    #[Route('/edit/{idPlageHoraire}', name: 'editPlageHoraire')]
+    public function updatePlageHoraire(
+        PlageHoraireRepository $plageHoraireRepository,
+        PlanningTypeRepository $planningTypeRepository,
+        EtatRepository $etatRepository,
+        Request $request,
+        int $idPlageHoraire
+    ): Response
+    {
+        $plageHoraire = $plageHoraireRepository->find($idPlageHoraire);
+
+        $planningType = $plageHoraire->getPlanningType();
+
+        $plageHoraireForm = $this->createForm(PlageHoraireType::class, $plageHoraire);
+
+        $plageHoraireForm->handleRequest($request);
+
+        if ($plageHoraireForm->isSubmitted() && $plageHoraireForm->isValid()) {
+            $plageHoraire = $plageHoraireForm->getData();
+
+            $etat = $plageHoraireForm->get('etats')->getData();
+            $plageHoraire->setEtat($etat);
+
+            $planningTypeRepository->save($planningType, true);
+            $plageHoraireRepository->save($plageHoraire, true);
+            $etatRepository->save($etat, true);
+
+            $this->addFlash('success', "Plage Horaire Modifiée !");
+            return $this->redirectToRoute('main_home');
+        }
+
+        return $this->render('main/edit.html.twig', [
+            'plageHoraire' => $plageHoraire,
+            'plageHoraireForm' => $plageHoraireForm->createView()
+        ]);
+    }
+    #[Route('/delete/{idPlageHoraire}', name: 'deletePlageHoraire')]
+    public function deletePlageHoraire(
+        PlageHoraireRepository $plageHoraireRepository,
+        int $idPlageHoraire
+    ): Response
+    {
+        $plageHoraire = $plageHoraireRepository->find($idPlageHoraire);
+
+        $plageHoraireRepository->delete($plageHoraire, true);
+
+        $this->addFlash('success', "Plage Horaire Supprimée !");
+        return $this->redirectToRoute('main_home');
+    }
+
 
 //    #[Route('/add/{idEmploye}', name: 'addPlageHoraire')]
 //    public function addPlageHoraire(
