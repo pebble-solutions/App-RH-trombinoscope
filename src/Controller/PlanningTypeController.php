@@ -3,7 +3,14 @@
 namespace App\Controller;
 
 use App\Controller\Api\EmployeController;
+use App\Entity\Etat;
+use App\Entity\PlageHoraire;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Proxies\__CG__\App\Entity\PlanningType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -33,27 +40,49 @@ class PlanningTypeController extends AbstractController
         return json_decode($response->getContent(), true);
     }
 
-    #[Route('/{id}', name: 'retrieve_one2', requirements: ['id' => '\d+'], methods: ["GET"])]
-    public function showPlanning(int $id, HttpClientInterface $client): Response
+    #[Route('', name: 'adddata', methods: ["POST"])]
+    public function addData(Request $request, EntityManagerInterface $entityManager)
     {
-        // Récupérer les données de l'employé
-        $planning = $this->getPlanning($client, $id);
+        $data = json_decode($request->getContent(), true);
 
-        return $this->render('planning_type/show.html.twig', [
-            'planning' => $planning,
-        ]);
+        // Creation du planning type
+        $planningType = new PlanningType();
+        $planningType->setIdEmploye($data['planningType']['idEmploye']);
+        $planningType->setInom($data['planningType']['inom']);
+
+
+        $plagesHoraires = $data['plagesHoraires'];
+        foreach ($plagesHoraires as $plage) {
+            $plageHoraire = new PlageHoraire();
+            $plageHoraire->setNomPlage($plage['nom_plage']);
+            $plageHoraire->setDebut(new DateTime($plage['debut']));
+            $plageHoraire->setFin(new DateTime($plage['fin']));
+            $plageHoraire->setNumJour($plage['num_jour']);
+            $plageHoraire->setPlanningType($planningType);
+            $entityManager->persist($plageHoraire);
+        }
+
+        // Create and associate the etat entities
+        $etatsData = $data['etats'];
+        foreach ($etatsData as $etatData) {
+            $etat = new Etat();
+            $etat->setNomEtat($etatData['nom_etat']);
+            $entityManager->persist($etat);
+
+            foreach ($plagesHoraires as $plage) {
+                if ($plage['id'] == $etatData['id']) {
+                    $plageHoraire = $entityManager->getRepository(PlageHoraire::class)->find($plage['id']);
+                    $plageHoraire->setEtat($etat);
+                    break;
+                }
+            }
+        }
+
+        $entityManager->persist($planningType);
+        $entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
-    /**
-     * Récupère les données du planning depuis l'API
-     */
-    private function getPlanning(HttpClientInterface $client, int $id): array
-    {
-        $url = 'http://172.17.0.3/public/showPlanning/' . $id;
-        $response = $client->request('GET', $url);
-
-        return json_decode($response->getContent(), true);
-    }
-
 
 //
 //#[Route('/planning_type/', name: 'planning_type_')]
@@ -72,5 +101,27 @@ class PlanningTypeController extends AbstractController
 //        ]);
 //    }
 //
+//    #[Route('/{id}', name: 'retrieve_one2', requirements: ['id' => '\d+'], methods: ["GET"])]
+//    public function showPlanning(int $id, HttpClientInterface $client): Response
+//    {
+//        // Récupérer les données de l'employé
+//        $planning = $this->getPlanning($client, $id);
+//
+//        return $this->render('planning_type/show.html.twig', [
+//            'planning' => $planning,
+//        ]);
+//    }
+//    /**
+//     * Récupère les données du planning depuis l'API
+//     */
+//    private function getPlanning(HttpClientInterface $client, int $id): array
+//    {
+//        $url = 'http://172.17.0.3/public/showPlanning/' . $id;
+//        $response = $client->request('GET', $url);
+//
+//        return json_decode($response->getContent(), true);
+//    }
+//
+
 //
 }
