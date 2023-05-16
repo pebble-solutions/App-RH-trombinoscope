@@ -41,6 +41,7 @@ class PlageHoraire
 
     #[ORM\ManyToOne(inversedBy: 'plageHoraires')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups("planning_api")]
     private ?Etat $Etats = null;
 
     public function __construct()
@@ -103,27 +104,6 @@ class PlageHoraire
         return $this;
     }
 
-//
-//    public function addPlanningType(PlanningFormType $planningType): self
-//    {
-//        if (!$this->planningTypes->contains($planningType)) {
-//            $this->planningTypes->add($planningType);
-//            $planningType->addPlagesHoraire($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removePlanningType(PlanningFormType $planningType): self
-//    {
-//        if ($this->planningTypes->removeElement($planningType)) {
-//            $planningType->removePlagesHoraire($this);
-//        }
-//
-//        return $this;
-//    }
-
-
     public function getPlanningType(): ?PlanningType
     {
         return $this->planningType;
@@ -148,6 +128,24 @@ class PlageHoraire
         return $this;
     }
 
-
+//
+//    public function addPlanningType(PlanningFormType $planningType): self
+//    {
+//        if (!$this->planningTypes->contains($planningType)) {
+//            $this->planningTypes->add($planningType);
+//            $planningType->addPlagesHoraire($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removePlanningType(PlanningFormType $planningType): self
+//    {
+//        if ($this->planningTypes->removeElement($planningType)) {
+//            $planningType->removePlagesHoraire($this);
+//        }
+//
+//        return $this;
+//    }
 
 }
