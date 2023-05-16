@@ -46,7 +46,9 @@ class PlanningController extends AbstractController
     }
 
     #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
-    public function createPlanning(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository): JsonResponse
+    public function createPlanning(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,
+                                   UrlGeneratorInterface $urlGenerator, PlanningTypeRepository $planningTypeRepository,
+                                   PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository): JsonResponse
     {
 
         $planningType = $serializer->deserialize($request->getContent(), PlanningType::class, 'json');
@@ -74,7 +76,8 @@ class PlanningController extends AbstractController
 
 
     #[Route('/api/plannings/{id}', name: "updatePlanning", methods: ['PUT'])]
-    public function updatePlanning(Request $request, SerializerInterface $serializer, PlanningType $currentPlanningType, EntityManagerInterface $em, PlageHoraireRepository $plageHoraireRepository): JsonResponse
+    public function updatePlanning(Request $request, SerializerInterface $serializer, PlanningType $currentPlanningType,
+                                   EntityManagerInterface $em, PlageHoraireRepository $plageHoraireRepository): JsonResponse
     {
         $updatedPlanning = $serializer->deserialize($request->getContent(),
             PlanningType::class,
