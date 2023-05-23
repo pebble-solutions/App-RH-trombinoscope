@@ -53,11 +53,13 @@ class EtatRepository extends ServiceEntityRepository
             // Joindre la table PlageHoraire en utilisant l'alias 'ph'
             ->join('e.plageHoraires', 'ph')
 
-            // Ajouter une condition à la requête qui filtre les résultats en fonction de l'identifiant de la plage horaire
+            // Ajouter une condition à la requête qui filtre les résultats
+            // en fonction de l'identifiant de la plage horaire
             ->andWhere('ph.id = :plageHoraireId')
             ->setParameter('plageHoraireId', $plageHoraire->getId());
 
-        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder et getOneOrNullResult() pour récupérer un seul objet ou null
+        // Récupérer le résultat de la requête en appelant getQuery() sur l'objet QueryBuilder
+        // et getOneOrNullResult() pour récupérer un seul objet ou null
         return $qb->getQuery()->getOneOrNullResult();
     }
 

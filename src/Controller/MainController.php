@@ -118,7 +118,8 @@ class MainController extends AbstractController
 
 //Affiche uniquement le planning suivant son id
     #[Route('/showPlanning/{id}', name: 'showPlanning', requirements: ['id' => '\d+'])]
-    public function showPlanningUser(int $id, PlanningTypeRepository $planningTypeRepository, PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository): Response
+    public function showPlanningUser(int $id, PlanningTypeRepository
+    $planningTypeRepository, EtatRepository $etatRepository): Response
     {
         $planningType = $planningTypeRepository->find($id);
         // Récupérer les plages horaires pour le planning type donné

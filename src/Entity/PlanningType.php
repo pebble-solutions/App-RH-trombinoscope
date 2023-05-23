@@ -70,6 +70,10 @@ class PlanningType
     {
         return $this->plagesHoraires;
     }
+    public function setPlageHoraire(PlageHoraire $plageHoraire): void
+    {
+        $this->plageHoraire = $plageHoraire;
+    }
 
     public function addPlageHoraire(PlageHoraire $plageHoraire): self
     {

@@ -37,7 +37,7 @@ class PlanningController extends AbstractController
 
 
     #[Route('/api/plannings/{id}', name: 'deletePlanning', methods: ['DELETE'])]
-    public function deleteBook(PlanningType $planningType, EntityManagerInterface $em): JsonResponse
+    public function deletePlanning(PlanningType $planningType, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($planningType);
         $em->flush();
@@ -91,6 +91,48 @@ class PlanningController extends AbstractController
         $em->flush();
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
-
-
 }
+//    #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
+//    public function createPlanning(
+//        Request $request,
+//        SerializerInterface $serializer,
+//        EntityManagerInterface $em,
+//        UrlGeneratorInterface $urlGenerator,
+//        PlanningTypeRepository $planningTypeRepository,
+//        PlageHoraireRepository $plageHoraireRepository,
+//        EtatRepository $etatRepository
+//    ): JsonResponse {
+//        // Récupération des données envoyées sous forme de tableau
+//        $content = $request->request->all();
+//
+//        // Récupération des champs spécifiques du formulaire
+//        $nomPlanning = $content['inom'];
+//        $jourSemaine = $content['numJour'];
+//        $nomPlageHoraire = $content['nomPlage'];
+//        $debutPlageHoraire = $content['debut'];
+//        $finPlageHoraire = $content['fin'];
+//        $etat = $content['etat'];
+//
+//        // Utilisez les valeurs récupérées pour créer et manipuler les objets nécessaires dans votre application
+//        // Création d'une instance de PlanningType avec les données récupérées
+//        $planningType = new PlanningType();
+//        $planningType->setInom($nomPlanning);
+//        // ...
+//
+//        // Recherche et affectation d'une plage horaire au planningType
+//        $plageHoraire = $plageHoraireRepository->find($nomPlageHoraire);
+//        $planningType->setPlageHoraire($plageHoraire);
+//
+//        // Persistez et sauvegardez les objets manipulés en utilisant l'EntityManager
+//        $em->persist($planningType);
+//        $em->flush();
+//
+//        // Sérialisez le planningType en JSON pour renvoyer la réponse
+//        $jsonPlanningType = $serializer->serialize($planningType, 'json');
+//
+//        // Générez l'URL de détail du planningType
+//        $location = $urlGenerator->generate('detailPlanning', ['id' => $planningType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+//
+//        // Renvoyez une réponse JSON avec l'objet sérialisé, le statut de création et l'en-tête de localisation
+//        return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
+//    }
