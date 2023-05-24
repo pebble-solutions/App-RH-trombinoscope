@@ -25,7 +25,7 @@ class PlanningType
     #[Groups("planning_api")]
     private ?string $inom = null;
 
-    #[ORM\OneToMany(mappedBy: 'planningType', targetEntity: PlageHoraire::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'planningType', targetEntity: PlageHoraire::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups("planning_api")]
     private Collection $plagesHoraires;
 
@@ -70,10 +70,6 @@ class PlanningType
     {
         return $this->plagesHoraires;
     }
-    public function setPlageHoraire(PlageHoraire $plageHoraire): void
-    {
-        $this->plageHoraire = $plageHoraire;
-    }
 
     public function addPlageHoraire(PlageHoraire $plageHoraire): self
     {
@@ -97,6 +93,4 @@ class PlanningType
 
         return $this;
     }
-
 }
-

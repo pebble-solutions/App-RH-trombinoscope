@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\PlageHoraireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,11 +21,11 @@ class PlageHoraire
     #[Groups("planning_api")]
     private ?string $nomPlage = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
     #[Groups("planning_api")]
     private ?\DateTimeInterface $debut = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
     #[Groups("planning_api")]
     private ?\DateTimeInterface $fin = null;
 
@@ -34,22 +33,14 @@ class PlageHoraire
     #[Groups("planning_api")]
     private ?int $numJour = null;
 
-
-    #[ORM\ManyToOne(inversedBy: 'PlageHoraire')]
+    #[ORM\ManyToOne(inversedBy: 'plagesHoraires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?PlanningType $planningType = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plageHoraires')]
+    #[ORM\ManyToOne(inversedBy: 'plageHoraires', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups("planning_api")]
-    private ?Etat $Etats = null;
-
-    public function __construct()
-    {
-        $this->planningTypes = new ArrayCollection();
-        $this->etats = new ArrayCollection();
-    }
-
+    private ?Etat $etat = null;
 
     public function getId(): ?int
     {
@@ -116,36 +107,15 @@ class PlageHoraire
         return $this;
     }
 
-    public function getEtats(): ?Etat
+    public function getEtat(): ?Etat
     {
-        return $this->Etats;
+        return $this->etat;
     }
 
-    public function setEtats(?Etat $Etats): self
+    public function setEtat(?Etat $etat): self
     {
-        $this->Etats = $Etats;
+        $this->etat = $etat;
 
         return $this;
     }
-
-//
-//    public function addPlanningType(PlanningFormType $planningType): self
-//    {
-//        if (!$this->planningTypes->contains($planningType)) {
-//            $this->planningTypes->add($planningType);
-//            $planningType->addPlagesHoraire($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removePlanningType(PlanningFormType $planningType): self
-//    {
-//        if ($this->planningTypes->removeElement($planningType)) {
-//            $planningType->removePlagesHoraire($this);
-//        }
-//
-//        return $this;
-//    }
-
 }

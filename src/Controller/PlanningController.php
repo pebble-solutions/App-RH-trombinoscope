@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\PlageHoraire;
 use App\Entity\PlanningType;
 use App\Repository\EtatRepository;
@@ -44,25 +45,88 @@ class PlanningController extends AbstractController
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+//    #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
+//    public function createPlanning(
+//        Request $request,
+//        SerializerInterface $serializer,
+//        EntityManagerInterface $em,
+//        UrlGeneratorInterface $urlGenerator,
+//        PlanningTypeRepository $planningTypeRepository,
+//        PlageHoraireRepository $plageHoraireRepository,
+//        EtatRepository $etatRepository
+//    ): JsonResponse {
+//        $planningData = json_decode($request->getContent(), true);
+//
+//        // Désérialisation des données JSON en objets PlanningType et PlageHoraire
+//        $planningType = $serializer->deserialize($request->getContent(), PlanningType::class, 'json');
+//        $plageHoraire = $serializer->deserialize(json_encode($planningData['plagesHoraires'][0]), PlageHoraire::class, 'json');
+//
+//        // Récupération de l'objet Etat correspondant à la plage horaire
+//        $etatData = $planningData['plagesHoraires'][0]['Etats'];
+//        $etat = $etatRepository->find($etatData['id']);
+//        $plageHoraire->setEtats($etat);
+//
+//        // Assignation de la plage horaire au planningType
+//        $planningType->addPlageHoraire($plageHoraire);
+//
+//        $em->persist($planningType);
+//        $em->flush();
+//
+//        $jsonPlanningType = $serializer->serialize($planningType, 'json', ['groups' => 'planning_api']);
+//
+//        $location = $urlGenerator->generate('detailPlanning', ['id' => $planningType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+//
+//        return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
+//    }
 
-    #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
-    public function createPlanning(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,
-                                   UrlGeneratorInterface $urlGenerator, PlanningTypeRepository $planningTypeRepository,
-                                   PlageHoraireRepository $plageHoraireRepository, EtatRepository $etatRepository): JsonResponse
-    {
-
+    #[Route('/api/plannings', name: 'createPlanning', methods: ['POST'])]
+    public function createPlanning(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        UrlGeneratorInterface $urlGenerator,
+        PlanningTypeRepository $planningTypeRepository,
+        PlageHoraireRepository $plageHoraireRepository,
+        EtatRepository $etatRepository
+    ): JsonResponse {
+        // Désérialisation des données JSON en un objet PlanningType
         $planningType = $serializer->deserialize($request->getContent(), PlanningType::class, 'json');
 
-//        dd($planningType);
-        // Récupération de l'ensemble des données envoyées sous forme de tableau
-        $content = $request->toArray();
+        // Récupération des données de la requête sous forme de tableau
+        $data = $request->toArray();
 
-        // Récupération de l'idPlageHoraire. S'il n'est pas défini, alors on met -1 par défaut.
-        $idPlageHoraire = $content['idplageHoraire'] ?? -1;
+        // Récupération des plages horaires et de leurs états
+        $plagesHorairesData = $data['plagesHoraires'] ?? [];
 
-        // On cherche la plage horaire qui correspond et on l'assigne au planningType.
-        // Si "find" ne trouve pas la plage horaire, alors null sera retourné.
-        $planningType->addPlageHoraire($plageHoraireRepository->find($idPlageHoraire));
+        foreach ($plagesHorairesData as $plageHoraireData) {
+            $nomPlage = $plageHoraireData['nomPlage'] ?? null;
+            $debut = $plageHoraireData['debut'] ?? null;
+            $fin = $plageHoraireData['fin'] ?? null;
+            $numJour = $plageHoraireData['numJour'] ?? null;
+            $etatData = $plageHoraireData['etat']['nomEtat'] ?? null;
+
+            // Créez une nouvelle instance de PlageHoraire et d'Etat
+            $plageHoraire = new PlageHoraire();
+            $etat = new Etat();
+
+            // Configurez les valeurs pour la plage horaire
+            $plageHoraire->setNomPlage($nomPlage);
+            $plageHoraire->setDebut(new \DateTime($debut));
+            $plageHoraire->setFin(new \DateTime($fin));
+            $plageHoraire->setNumJour($numJour);
+
+            // Configurez les valeurs pour l'état
+            $etat->setNomEtat($etatData);
+
+            // Associez l'état à la plage horaire
+            $plageHoraire->setEtat($etat);
+
+            // Associez la plage horaire au planningType
+            $planningType->addPlageHoraire($plageHoraire);
+
+            // Persistez la plage horaire (pas besoin de persister l'état car il est cascade persist)
+            $em->persist($plageHoraire);
+        }
 
         $em->persist($planningType);
         $em->flush();
@@ -73,6 +137,8 @@ class PlanningController extends AbstractController
 
         return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
     }
+
+
 
 
     #[Route('/api/plannings/{id}', name: "updatePlanning", methods: ['PUT'])]

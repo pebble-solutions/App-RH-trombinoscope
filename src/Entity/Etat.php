@@ -21,9 +21,8 @@ class Etat
     #[Groups("planning_api")]
     private ?string $nomEtat = null;
 
-    #[ORM\OneToMany(mappedBy: 'Etats', targetEntity: PlageHoraire::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'etat', targetEntity: PlageHoraire::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $plageHoraires;
-
 
     public function __construct()
     {
@@ -59,7 +58,7 @@ class Etat
     {
         if (!$this->plageHoraires->contains($plageHoraire)) {
             $this->plageHoraires->add($plageHoraire);
-            $plageHoraire->setEtats($this);
+            $plageHoraire->setEtat($this);
         }
 
         return $this;
@@ -69,31 +68,11 @@ class Etat
     {
         if ($this->plageHoraires->removeElement($plageHoraire)) {
             // set the owning side to null (unless already changed)
-            if ($plageHoraire->getEtats() === $this) {
-                $plageHoraire->setEtats(null);
+            if ($plageHoraire->getEtat() === $this) {
+                $plageHoraire->setEtat(null);
             }
         }
 
         return $this;
     }
 }
-
-
-//    public function addPlageHoraire(PlageHoraire $plageHoraire): self
-//    {
-//        if (!$this->plageHoraires->contains($plageHoraire)) {
-//            $this->plageHoraires->add($plageHoraire);
-//            $plageHoraire->addEtat($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removePlageHoraire(PlageHoraire $plageHoraire): self
-//    {
-//        if ($this->plageHoraires->removeElement($plageHoraire)) {
-//            $plageHoraire->removeEtat($this);
-//        }
-//
-//        return $this;
-//    }
