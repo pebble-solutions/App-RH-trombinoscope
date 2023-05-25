@@ -135,7 +135,7 @@ class PlanningController extends AbstractController
 
         $location = $urlGenerator->generate('detailPlanning', ['id' => $planningType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
+        return new JsonResponse($jsonPlanningType, Response::HTTP_OK, ["Location" => $location], true);
     }
 
 
