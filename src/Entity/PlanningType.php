@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlanningTypeRepository::class)]
 class PlanningType
@@ -18,10 +19,13 @@ class PlanningType
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "L'identifiant de l'employé ne peut pas être vide.")]
+    #[Assert\Type(type: "integer", message: "L'identifiant de l'employé doit être un entier.")]
     #[Groups("planning_api")]
     private ?int $idEmploye = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
     #[Groups("planning_api")]
     private ?string $inom = null;
 

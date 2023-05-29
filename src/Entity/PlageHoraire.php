@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlageHoraireRepository::class)]
 class PlageHoraire
@@ -18,18 +19,26 @@ class PlageHoraire
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Le nom de la plage horaire ne peut pas être vide.")]
     #[Groups("planning_api")]
     private ?string $nomPlage = null;
 
     #[ORM\Column(type: "time")]
+    #[Assert\NotNull(message: "L'heure de début ne peut pas être vide.")]
+    #[Assert\Time(message: "L'heure de début doit être au format valide.")]
     #[Groups("planning_api")]
     private ?\DateTimeInterface $debut = null;
 
     #[ORM\Column(type: "time")]
+    #[Assert\NotNull(message: "L'heure de fin ne peut pas être vide.")]
+    #[Assert\Time(message: "L'heure de fin doit être au format valide.")]
+    #[Assert\GreaterThan(propertyPath: "debut", message: "L'heure de fin doit être supérieure à l'heure de début.")]
     #[Groups("planning_api")]
     private ?\DateTimeInterface $fin = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "Le numéro de jour ne peut pas être vide.")]
+    #[Assert\Type(type: "integer", message: "Le numéro de jour doit être un entier.")]
     #[Groups("planning_api")]
     private ?int $numJour = null;
 
