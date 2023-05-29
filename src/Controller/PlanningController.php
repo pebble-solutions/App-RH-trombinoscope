@@ -45,39 +45,6 @@ class PlanningController extends AbstractController
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
-//    #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
-//    public function createPlanning(
-//        Request $request,
-//        SerializerInterface $serializer,
-//        EntityManagerInterface $em,
-//        UrlGeneratorInterface $urlGenerator,
-//        PlanningTypeRepository $planningTypeRepository,
-//        PlageHoraireRepository $plageHoraireRepository,
-//        EtatRepository $etatRepository
-//    ): JsonResponse {
-//        $planningData = json_decode($request->getContent(), true);
-//
-//        // Désérialisation des données JSON en objets PlanningType et PlageHoraire
-//        $planningType = $serializer->deserialize($request->getContent(), PlanningType::class, 'json');
-//        $plageHoraire = $serializer->deserialize(json_encode($planningData['plagesHoraires'][0]), PlageHoraire::class, 'json');
-//
-//        // Récupération de l'objet Etat correspondant à la plage horaire
-//        $etatData = $planningData['plagesHoraires'][0]['Etats'];
-//        $etat = $etatRepository->find($etatData['id']);
-//        $plageHoraire->setEtats($etat);
-//
-//        // Assignation de la plage horaire au planningType
-//        $planningType->addPlageHoraire($plageHoraire);
-//
-//        $em->persist($planningType);
-//        $em->flush();
-//
-//        $jsonPlanningType = $serializer->serialize($planningType, 'json', ['groups' => 'planning_api']);
-//
-//        $location = $urlGenerator->generate('detailPlanning', ['id' => $planningType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-//
-//        return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
-//    }
 
     #[Route('/api/plannings', name: 'createPlanning', methods: ['POST'])]
     public function createPlanning(
@@ -158,47 +125,4 @@ class PlanningController extends AbstractController
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
-//    #[Route('/api/plannings', name: "createPlanning", methods: ['POST'])]
-//    public function createPlanning(
-//        Request $request,
-//        SerializerInterface $serializer,
-//        EntityManagerInterface $em,
-//        UrlGeneratorInterface $urlGenerator,
-//        PlanningTypeRepository $planningTypeRepository,
-//        PlageHoraireRepository $plageHoraireRepository,
-//        EtatRepository $etatRepository
-//    ): JsonResponse {
-//        // Récupération des données envoyées sous forme de tableau
-//        $content = $request->request->all();
-//
-//        // Récupération des champs spécifiques du formulaire
-//        $nomPlanning = $content['inom'];
-//        $jourSemaine = $content['numJour'];
-//        $nomPlageHoraire = $content['nomPlage'];
-//        $debutPlageHoraire = $content['debut'];
-//        $finPlageHoraire = $content['fin'];
-//        $etat = $content['etat'];
-//
-//        // Utilisez les valeurs récupérées pour créer et manipuler les objets nécessaires dans votre application
-//        // Création d'une instance de PlanningType avec les données récupérées
-//        $planningType = new PlanningType();
-//        $planningType->setInom($nomPlanning);
-//        // ...
-//
-//        // Recherche et affectation d'une plage horaire au planningType
-//        $plageHoraire = $plageHoraireRepository->find($nomPlageHoraire);
-//        $planningType->setPlageHoraire($plageHoraire);
-//
-//        // Persistez et sauvegardez les objets manipulés en utilisant l'EntityManager
-//        $em->persist($planningType);
-//        $em->flush();
-//
-//        // Sérialisez le planningType en JSON pour renvoyer la réponse
-//        $jsonPlanningType = $serializer->serialize($planningType, 'json');
-//
-//        // Générez l'URL de détail du planningType
-//        $location = $urlGenerator->generate('detailPlanning', ['id' => $planningType->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-//
-//        // Renvoyez une réponse JSON avec l'objet sérialisé, le statut de création et l'en-tête de localisation
-//        return new JsonResponse($jsonPlanningType, Response::HTTP_CREATED, ["Location" => $location], true);
-//    }
+

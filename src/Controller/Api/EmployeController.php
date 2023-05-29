@@ -26,42 +26,12 @@ class EmployeController extends AbstractController
 //            "initials" => "AYF"]);
 //    }
 
-//    #[Route('/{id}')]
-//    public function getEmployeById($id): JsonResponse
-//    {
-//        $httpClient = HttpClient::create();
-//        $response = $httpClient->request('GET', 'http://761epbg2b.amandine.cloud/api/v2/personnel/'.$id, ['headers' => ['authorization' => 'bearer']]);
-//        $data = json_decode($response->getContent(), true);
-//
-//        return new JsonResponse([
-//            'id' => $data['id'],
-//            'personne' => $data['personne'],
-//            'matricule' => $data['matricule'],
-//            'niveau_hierarchique' => $data['niveau_hierarchique'],
-//            'n_1' => $data['n_1'],
-//            'cache_nom' => $data['cache_nom'],
-//            'dentree' => $data['dentree'],
-//            'dsortie' => $data['dsortie'],
-//            'initials' => $data['initials'],
-//        ]);
-//    }
     #[Route('/{id}')]
     public function getEmployeById($id): JsonResponse
     {
-        $authorization = 'Bearer ' . $this->getAuthorizationToken();
-        $headers = [
-            'Structure' => '1',
-            'Authorization' => $authorization,
-        ];
-
-        $client = new Client();
-
-        $response = $client->request('GET', 'http://761epbg2b.amandine.cloud/api/v2/personnel/' . $id, [
-            'headers' => $headers,
-           // 'content-type' => 'application/json'
-        ]);
-
-        $data = json_decode($response->getBody()->getContents(), true);
+        $httpClient = HttpClient::create();
+        $response = $httpClient->request('GET', 'http://761epbg2b.amandine.cloud/api/v2/personnel/'.$id, ['headers' => ['authorization' => 'bearer']]);
+        $data = json_decode($response->getContent(), true);
 
         return new JsonResponse([
             'id' => $data['id'],
@@ -74,17 +44,6 @@ class EmployeController extends AbstractController
             'dsortie' => $data['dsortie'],
             'initials' => $data['initials'],
         ]);
-    }
-
-    private function getAuthorizationToken(): string
-    {
-        $client = new Client();
-
-        $response = $client->request('POST', 'http://761epbg2b.amandine.cloud/api/auth?_pas', []);
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        $authorizationToken = $data['data']['token']['jwt'];
-        return $authorizationToken;
     }
 
 //    #[Route('/{id}')]
@@ -124,67 +83,6 @@ class EmployeController extends AbstractController
 //        return $authorizationToken;
 //    }
 
-//    #[Route('/{id}')]
-//    public function getEmployeById($id, HttpClientInterface $httpClient): JsonResponse
-//    {
-//        try {
-//            $authorization = 'Bearer ' . $this->getAuthorizationToken($httpClient);
-//            $headers = [
-//                'Structure' => '1',
-//                'Authorization' => $authorization,
-//            ];
-//
-//            $response = $httpClient->request('GET', 'http://761epbg2b.amandine.cloud/api/v2/personnel/' . $id, [
-//                'headers' => $headers,
-//            ]);
-//
-//            if ($response->getStatusCode() === 200) {
-//                $data = json_decode($response->getContent(), true);
-//
-//                // Validation des données
-//                $validatedData = $this->validateData($data);
-//
-//                // Utilisation de modèles de données
-//                $responseData = [
-//                    'id' => $validatedData['id'],
-//                    'personne' => $validatedData['personne'],
-//                    'matricule' => $validatedData['matricule'],
-//                    'niveau_hierarchique' => $validatedData['niveau_hierarchique'],
-//                    'n_1' => $validatedData['n_1'],
-//                    'cache_nom' => $validatedData['cache_nom'],
-//                    'dentree' => $validatedData['dentree'],
-//                    'dsortie' => $validatedData['dsortie'],
-//                    'initials' => $validatedData['initials'],
-//                ];
-//
-//                return new JsonResponse($responseData);
-//            } else {
-//                throw new \Exception('Failed to retrieve employee data.');
-//            }
-//        } catch (\Exception $e) {
-//            // Gestion des exceptions
-//            return new JsonResponse(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//    private function getAuthorizationToken(HttpClientInterface $httpClient): string
-//    {
-//        $response = $httpClient->request('POST', 'http://761epbg2b.amandine.cloud/api/auth?_pas', []);
-//
-//        if ($response->getStatusCode() === 200) {
-//            $data = json_decode($response->getContent(), true);
-//            $authorizationToken = $data['data']['token']['jwt_refresh'];
-//            return $authorizationToken;
-//        } else {
-//            throw new \Exception('Failed to retrieve authorization token.');
-//        }
-//    }
-//
-//    private function validateData(array $data): array
-//    {
-//        // Ajoutez ici vos règles de validation en utilisant Symfony Validator ou une autre bibliothèque de validation
-//
-//        return $data;
-//    }
+
 
 }
