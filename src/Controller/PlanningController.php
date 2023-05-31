@@ -9,6 +9,7 @@ use App\Repository\EtatRepository;
 use App\Repository\PlageHoraireRepository;
 use App\Repository\PlanningTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pebble\Security\PAS\PasToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,11 +19,57 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
+use Throwable;
+
 class PlanningController extends AbstractController
 {
+    public function AuthToken()
+    {
+        try {
+            $token = new PasToken();
+            $token->getTokenFromAuthorizationHeader()->decode();
+                return $token;
+        } catch (\Throwable $e) {
+            throw new \InvalidArgumentException("Error : ".$e->getMessage());
+        }
+    }
+    #[Route('/api/test', name: 'testapi', methods: ['GET'])]
+    public function getTest(){
+            $token = $this->AuthToken();
+            return new JsonResponse(['succes' => $token->getLogin()]);
+    }
+
+//    #[Route('/api/test', name: 'testapi', methods: ['GET'])]
+//    public function getTest()
+//    {
+//        try {
+//            $token = new PasToken();
+//            $token->getTokenFromAuthorizationHeader()->decode();
+//            $content = $token->getLogin();
+//
+//            var_dump($content); // Ajoutez cette ligne pour vérifier les données
+//
+//            // Vérification de la propriété "name"
+//            if (is_object($content) && isset($content->name)) {
+//                $name = $content->name; // Accéder à la propriété "name"
+//                return new Response($name);
+//            } else {
+//                // La propriété "name" n'est pas définie dans les données
+//                throw new \Exception("La propriété 'name' n'est pas présente dans les données ou les données ne sont pas valides.");
+//            }
+//        } catch (\Throwable $e) {
+//            $error = "Error: " . $e->getMessage();
+//
+//            return new Response($error, 500);
+//        }
+//    }
+
+
+
     #[Route('/api/plannings', name: 'app_planning', methods: ['GET'])]
     public function getAllPlannings(PlanningTypeRepository $planningTypeRepository, SerializerInterface $serializer): JsonResponse
     {
+        $token = $this->AuthToken();
         $planningList = $planningTypeRepository->findAll();
         $jsonPlanningList = $serializer->serialize($planningList, 'json', ['groups' => 'planning_api']);
         return new JsonResponse($jsonPlanningList, Response::HTTP_OK, [], true);
@@ -32,6 +79,7 @@ class PlanningController extends AbstractController
     #[Route('/api/plannings/{id}', name: 'detailPlanning', methods: ['GET'])]
     public function getDetailPlanning(PlanningType $planningType, SerializerInterface $serializer): JsonResponse
     {
+        $token = $this->AuthToken();
         $jsonPlanningType = $serializer->serialize($planningType, 'json', ['groups' => 'planning_api']);
         return new JsonResponse($jsonPlanningType, Response::HTTP_OK, ['accept' => 'json'], true);
     }
