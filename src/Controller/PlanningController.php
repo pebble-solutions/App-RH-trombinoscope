@@ -69,7 +69,7 @@ class PlanningController extends AbstractController
     #[Route('/api/plannings', name: 'app_planning', methods: ['GET'])]
     public function getAllPlannings(PlanningTypeRepository $planningTypeRepository, SerializerInterface $serializer): JsonResponse
     {
-        $token = $this->AuthToken();
+        //$token = $this->AuthToken();
         $planningList = $planningTypeRepository->findAll();
         $jsonPlanningList = $serializer->serialize($planningList, 'json', ['groups' => 'planning_api']);
         return new JsonResponse($jsonPlanningList, Response::HTTP_OK, [], true);
@@ -79,7 +79,7 @@ class PlanningController extends AbstractController
     #[Route('/api/plannings/{id}', name: 'detailPlanning', methods: ['GET'])]
     public function getDetailPlanning(PlanningType $planningType, SerializerInterface $serializer): JsonResponse
     {
-        $token = $this->AuthToken();
+        //$token = $this->AuthToken();
         $jsonPlanningType = $serializer->serialize($planningType, 'json', ['groups' => 'planning_api']);
         return new JsonResponse($jsonPlanningType, Response::HTTP_OK, ['accept' => 'json'], true);
     }

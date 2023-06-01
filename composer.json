@@ -13,6 +13,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
         "guzzlehttp/guzzle": "^7.7",
+        "nelmio/cors-bundle": "^2.3",
+        "pebble/pas-token-client": "dev-main",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.20",
         "sensio/framework-extra-bundle": "^6.2",
@@ -44,8 +46,7 @@
         "symfony/web-link": "6.1.*",
         "symfony/yaml": "6.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0",
-        "pebble/pas-token-client": "dev-main"
+        "twig/twig": "^2.12|^3.0"
     },
     "repositories": [
         {
